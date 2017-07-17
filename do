@@ -99,6 +99,13 @@ cp -pr cpucycles/* "$work"
 cp -pr "$work"/lib/* "$lib"
 cp -pr "$work"/include/* "$include"
 
+echo "=== `date` === building kernelrandombytes"
+rm -rf "$work"
+mkdir -p "$work"
+cp -pr kernelrandombytes/* "$work"
+( cd "$work" && sh do )
+cp -pr "$work"/lib/* "$lib"
+
 okabi \
 | while read abi
 do
@@ -117,7 +124,7 @@ do
 	echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
 	rm -rf "$work"
 	mkdir -p "$work"
-	cp -pr gmp-6.0.0/* "$work"
+	cp -pr gmp-6.1.2/* "$work"
 	( cd "$work" \
 	  && ./configure --enable-cxx \
 	     ABI="$gmpabi" \
@@ -151,7 +158,7 @@ do
     echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
     rm -rf "$work"
     mkdir -p "$work"
-    cp -pr cryptopp-562/* "$work"
+    cp -pr cryptopp-565/* "$work"
     ( cd "$work" \
       && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
       && cp libcryptopp.a "$lib/$abi/libcryptopp.a" \
@@ -202,9 +209,26 @@ do
       echo "=== `date` === $abi $o/$p"
       libs=`"oklibs-$abi"`
       libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
+      [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
       [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
+
+      trylibs="$libs"
+      measurelibs="$libs"
+      userandombytes=0
+      [ $o = crypto_scalarmult ] && userandombytes=1
+      [ $o = crypto_box ] && userandombytes=1
+      [ $o = crypto_dh ] && userandombytes=1
+      [ $o = crypto_encrypt ] && userandombytes=1
+      [ $o = crypto_kem ] && userandombytes=1
+      [ $o = crypto_sign ] && userandombytes=1
+      if [ $userandombytes = 1 ]
+      then
+        trylibs="$lib/$abi/knownrandombytes.o $measurelibs"
+        measurelibs="$lib/$abi/fastrandombytes.o $measurelibs"
+      fi
 
       rm -rf "$work"
       mkdir -p "$work"
@@ -248,7 +272,6 @@ do
 	cp -p "$o/try.c" "$work/compile/try.$language"
 	cp -p "$o/measure.c" "$work/compile/measure.$language"
 	cp -p "try-anything.c" "$work/compile/try-anything.$language"
-	cp -p "try.h" "$work/compile/try.h"
 	cp -p "measure-anything.c" "$work/compile/measure-anything.$language"
 
 	(
@@ -336,7 +359,7 @@ do
 	    $compiler -DSUPERCOP -DSMALL \
 	      -I. -I"$include" -I"$include/$abi" \
 	      -o try try.$language try-anything.$language \
-	      "$op.a" $libs >../errors 2>&1 || ok=0
+	      "$op.a" $trylibs >../errors 2>&1 || ok=0
 	    cat ../errors \
 	    | while read err
 	    do
@@ -370,7 +393,7 @@ do
 	    $compiler -DSUPERCOP \
 	      -I. -I"$include" -I"$include/$abi" \
 	      -o try try.$language try-anything.$language \
-	      "$op.a" $libs >../errors 2>&1 || ok=0
+	      "$op.a" $trylibs >../errors 2>&1 || ok=0
 	    cat ../errors \
 	    | while read err
 	    do
@@ -412,7 +435,7 @@ do
 	      -DSUPERCOP -DLOOPS=3 \
 	      -I. -I"$include" -I"$include/$abi" \
 	      -o measure measure.$language measure-anything.$language \
-	      "$op.a" $libs >../errors 2>&1 || ok=0
+	      "$op.a" $measurelibs >../errors 2>&1 || ok=0
 	    cat ../errors \
 	    | while read err
 	    do
@@ -455,6 +478,47 @@ do
       || :
     done
   done
+
+  if [ $o = crypto_rng ]
+  then
+    okabi \
+    | while read abi
+    do
+      include="-I. -I$include -I$include/$abi"
+
+      libs=`"oklibs-$abi"`
+      libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/$abi/kernelrandombytes.o $libs"
+      [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
+      [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
+      [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
+      [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
+
+      echo "=== `date` === $abi knownrandombytes"
+
+      rm -rf "$work"
+      mkdir -p "$work"
+      cp -pr knownrandombytes/* "$work"
+
+
+      ( cd "$work" \
+        && env abi="$abi" libs="$libs" include="$include" sh do \
+	&& cp -p "lib/$abi/knownrandombytes.o" "$lib/$abi/knownrandombytes.o"
+      )
+
+      echo "=== `date` === $abi fastrandombytes"
+
+      rm -rf "$work"
+      mkdir -p "$work"
+      cp -pr fastrandombytes/* "$work"
+
+      ( cd "$work" \
+        && env abi="$abi" libs="$libs" include="$include" sh do \
+	&& cp -p "lib/$abi/fastrandombytes.o" "$lib/$abi/fastrandombytes.o"
+      )
+    done
+  fi
+
 done
 
 echo "=== `date` === finishing"

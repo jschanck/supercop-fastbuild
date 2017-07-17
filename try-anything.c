@@ -1,5 +1,5 @@
 /*
- * try-anything.c version 20140425
+ * try-anything.c version 20170714
  * D. J. Bernstein
  * Some portions adapted from TweetNaCl by Bernstein, Janssen, Lange, Schwabe.
  * Public domain.
@@ -108,14 +108,6 @@ static void increment(u8 *n)
               if (!++n[6])
                 if (!++n[7])
                   ;
-}
-
-void randombytes(unsigned char *x,unsigned long long xlen)
-{
-  const static unsigned char randombytes_k[33] = "answer randombytes from crypto_*";
-  static unsigned char randombytes_n[8];
-  salsa20(x,xlen,randombytes_n,randombytes_k);
-  increment(randombytes_n);
 }
 
 static void testvector(unsigned char *x,unsigned long long xlen)

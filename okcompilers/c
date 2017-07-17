@@ -1,3 +1,23 @@
+gcc -march=native -mtune=native -O3 -fomit-frame-pointer -fwrapv
+gcc -march=native -mtune=native -Os -fomit-frame-pointer -fwrapv
+gcc -march=native -mtune=native -O2 -fomit-frame-pointer -fwrapv
+gcc -march=native -mtune=native -O -fomit-frame-pointer -fwrapv
+clang -march=native -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments
+gcc -mcpu=native -mfpu=neon -O3 -fomit-frame-pointer -fwrapv
+gcc -mcpu=native -mfpu=neon -Os -fomit-frame-pointer -fwrapv
+gcc -mcpu=native -mfpu=neon -O2 -fomit-frame-pointer -fwrapv
+gcc -mcpu=native -mfpu=neon -O -fomit-frame-pointer -fwrapv
+clang -mcpu=native -mfpu=neon -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments
+gcc -mcpu=cortex-a8 -mfpu=neon -O3 -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a8 -mfpu=neon -Os -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a8 -mfpu=neon -O2 -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a8 -mfpu=neon -O -fomit-frame-pointer -fwrapv
+clang -mcpu=cortex-a8 -mfpu=neon -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments
+gcc -mcpu=cortex-a9 -mfpu=neon -O3 -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a9 -mfpu=neon -Os -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a9 -mfpu=neon -O2 -fomit-frame-pointer -fwrapv
+gcc -mcpu=cortex-a9 -mfpu=neon -O -fomit-frame-pointer -fwrapv
+clang -mcpu=cortex-a9 -mfpu=neon -O3 -fomit-frame-pointer -fwrapv -Qunused-arguments
 gcc -m64 -O3 -fomit-frame-pointer
 gcc -m64 -Os -fomit-frame-pointer
 gcc -m64 -O2 -fomit-frame-pointer
@@ -1623,7 +1643,7 @@ pgcc -tp core2-32 -O2
 pgcc -tp core2-32 -O3
 pgcc -tp core2-32 -fast
 xlc -q64 -O2
-xlc -q64 -O2 -qmaxmem=-1 -qarch=auto -qtune=auto 
+xlc -q64 -O2 -qmaxmem=-1 -qarch=auto -qtune=auto
 xlc -q64 -O3
 xlc -q64 -O3 -qhot
 xlc -q64 -O3 -qarch=auto -qtune=auto
@@ -1634,7 +1654,7 @@ xlc -q64
 xlc -q64 -qtune=pwr3 -O2
 xlc -q64 -qtune=pwr3 -O
 xlc -q32 -O2
-xlc -q32 -O2 -qmaxmem=-1 -qarch=auto -qtune=auto 
+xlc -q32 -O2 -qmaxmem=-1 -qarch=auto -qtune=auto
 xlc -q32 -O3
 xlc -q32 -O3 -qhot
 xlc -q32 -O3 -qarch=auto -qtune=auto
@@ -1658,30 +1678,30 @@ opt-SUNWspro-bin-cc
 opt-ansic-bin-cc +DD64 -fast
 opt-ansic-bin-cc +DD64
 opt-ansic-bin-cc -fast
-opt-ansic-bin-cc 
+opt-ansic-bin-cc
 opt-MIPSpro-bin-cc -64 -Ofast
 opt-MIPSpro-bin-cc -64
 opt-MIPSpro-bin-cc -n32 -Ofast
 opt-MIPSpro-bin-cc -n32
 opt-MIPSpro-bin-cc -Ofast
 opt-MIPSpro-bin-cc
-clang -O3 -fomit-frame-pointer
-clang -O3 -fwrapv -march=native -fomit-frame-pointer
-clang -O3 -fwrapv -march=native -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer
-clang -O3 -fwrapv -mavx -fomit-frame-pointer
-clang -O3 -fwrapv -mavx -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer
-clang -O3 -fwrapv -mavx2 -fomit-frame-pointer
-clang -O3 -fwrapv -mavx2 -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer
-clang -O3 -fwrapv -mavx -maes -mpclmul -fomit-frame-pointer
-clang -O3 -fwrapv -mavx -maes -mpclmul -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer
-clang -O3 -fwrapv -march=x86-64 -mcpu=core-avx2 -mavx2 -maes -mpclmul -fomit-frame-pointer
-clang -O3 -fwrapv -march=x86-64 -mcpu=core-avx2 -mavx2 -maes -mpclmul -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=neon -fomit-frame-pointer 
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=neon -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=neon -fomit-frame-pointer 
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=neon -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16 -fomit-frame-pointer 
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16 -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fomit-frame-pointer 
-clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive
+clang -O3 -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -march=native -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -march=native -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx2 -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx2 -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx -maes -mpclmul -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -mavx -maes -mpclmul -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -march=x86-64 -mcpu=core-avx2 -mavx2 -maes -mpclmul -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -march=x86-64 -mcpu=core-avx2 -mavx2 -maes -mpclmul -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -fomit-frame-pointer -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=neon -fomit-frame-pointer  -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=neon -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=neon -fomit-frame-pointer  -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=neon -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16 -fomit-frame-pointer  -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=hard -mfpu=vfpv3-d16 -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fomit-frame-pointer  -Qunused-arguments
+clang -O3 -fwrapv -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fomit-frame-pointer -fpolly -funroll-loops -fvectorize -fslp-vectorize -fslp-vectorize-aggressive -Qunused-arguments
 cc
