@@ -103,6 +103,13 @@ then
     cp -pr "$work"/lib/* "$lib"
     cp -pr "$work"/include/* "$include"
 
+    echo "=== `date` === building kernelrandombytes"
+    rm -rf "$work"
+    mkdir -p "$work"
+    cp -pr kernelrandombytes/* "$work"
+    ( cd "$work" && sh do )
+    cp -pr "$work"/lib/* "$lib"
+
     okabi \
     | while read abi
     do
@@ -213,9 +220,26 @@ do
       echo "=== `date` === $abi $o/$p"
       libs=`"oklibs-$abi"`
       libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/$abi/kernelrandombytes.o $libs"
       [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
+      [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
       [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
       [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
+
+      trylibs="$libs"
+      measurelibs="$libs"
+      userandombytes=0
+      [ $o = crypto_scalarmult ] && userandombytes=1
+      [ $o = crypto_box ] && userandombytes=1
+      [ $o = crypto_dh ] && userandombytes=1
+      [ $o = crypto_encrypt ] && userandombytes=1
+      [ $o = crypto_kem ] && userandombytes=1
+      [ $o = crypto_sign ] && userandombytes=1
+      if [ $userandombytes = 1 ]
+      then
+        trylibs="$lib/$abi/knownrandombytes.o $measurelibs"
+        measurelibs="$lib/$abi/fastrandombytes.o $measurelibs"
+      fi
 
       rm -rf "$work"
       mkdir -p "$work"
@@ -259,7 +283,6 @@ do
     cp -p "$o/try.c" "$work/compile/try.$language"
     cp -p "$o/measure.c" "$work/compile/measure.$language"
     cp -p "try-anything.c" "$work/compile/try-anything.$language"
-    cp -p "try.h" "$work/compile/try.h"
     cp -p "measure-anything.c" "$work/compile/measure-anything.$language"
 
     (
@@ -465,9 +488,49 @@ do
       && cp -p "$work/bestc/$o.h" "$include/$abi/$o.h" \
       || :
     done
+  done
 
-    break
-done
+  if [ $o = crypto_rng ]
+  then
+    okabi \
+    | while read abi
+    do
+      include="-I. -I$include -I$include/$abi"
+
+      libs=`"oklibs-$abi"`
+      libs="$lib/$abi/cpucycles.o $libs"
+      libs="$lib/$abi/kernelrandombytes.o $libs"
+      [ -f "$lib/$abi/libgmp.a" ] && libs="$lib/$abi/libgmp.a $libs"
+      [ -f "$lib/$abi/libgmpxx.a" ] && libs="$lib/$abi/libgmpxx.a $libs"
+      [ -f "$lib/$abi/libcryptopp.a" ] && libs="$lib/$abi/libcryptopp.a $libs"
+      [ -f "$lib/$abi/lib${project}.a" ] && libs="$lib/$abi/lib${project}.a $libs"
+
+      echo "=== `date` === $abi knownrandombytes"
+
+      rm -rf "$work"
+      mkdir -p "$work"
+      cp -pr knownrandombytes/* "$work"
+
+
+      ( cd "$work" \
+        && env abi="$abi" libs="$libs" include="$include" sh do \
+	&& cp -p "lib/$abi/knownrandombytes.o" "$lib/$abi/knownrandombytes.o"
+      )
+
+      echo "=== `date` === $abi fastrandombytes"
+
+      rm -rf "$work"
+      mkdir -p "$work"
+      cp -pr fastrandombytes/* "$work"
+
+      ( cd "$work" \
+        && env abi="$abi" libs="$libs" include="$include" sh do \
+	&& cp -p "lib/$abi/fastrandombytes.o" "$lib/$abi/fastrandombytes.o"
+      )
+    done
+  fi
+
+echo "=== `date` === finishing"
 
 exec 1>&7 7>&-
 cat $top/work/errors
