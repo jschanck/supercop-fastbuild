@@ -145,14 +145,13 @@ then
         echo "=== `date` === trying CC=$c CXX=$cpp CFLAGS=$copts CXXFLAGS=$cppopts ABI=$gmpabi"
         rm -rf "$work"
         mkdir -p "$work"
-        cp -pr gmp-6.0.0/* "$work"
+        cp -pr gmp-6.1.2/* "$work"
         ( cd "$work" \
           && ./configure --enable-cxx \
              ABI="$gmpabi" \
              CC="$c" CXX="$cpp" CFLAGS="$copts" CXXFLAGS="$cppopts" LDFLAGS="$copts" \
           && make \
           && make check \
-          && cp gmp.h gmpxx.h gmp-impl.h longlong.h config.h gmp-mparam.h fib_table.h mp_bases.h "$include/$abi" \
           && cp gmp.h gmpxx.h gmp-impl.h longlong.h \
           config.h gmp-mparam.h fac_table.h fib_table.h mp_bases.h "$include/$abi" \
           && ( ranlib ".libs/libgmp.a" || : ) \
@@ -184,7 +183,7 @@ then
         echo "=== `date` === trying CXX=$cpp CXXFLAGS=$cppopts"
         rm -rf "$work"
         mkdir -p "$work"
-        cp -pr cryptopp-562/* "$work"
+        cp -pr cryptopp-565/* "$work"
         ( cd "$work" \
           && make CXX="$cpp" CXXFLAGS="-DNDEBUG $cppopts" LDFLAGS="$cppopts" \
           && cp libcryptopp.a "$lib/$abi/libcryptopp.a" \
