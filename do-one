@@ -42,7 +42,7 @@ cp include/* "$include"
 
 exec >>"$top/log"
 exec 2>&1
-exec 5>"$top/data"
+exec 5>>"$top/data"
 exec </dev/null
 
 echo "=== `date` === starting"
