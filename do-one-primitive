@@ -40,9 +40,7 @@ mkdir -p "$include"
 
 cp include/* "$include"
 
-exec 7>&1
-
-exec >"$top/log"
+exec >>"$top/log"
 exec 2>&1
 exec 5>"$top/data"
 exec </dev/null
@@ -237,7 +235,7 @@ do
       [ $o = crypto_sign ] && userandombytes=1
       if [ $userandombytes = 1 ]
       then
-        trylibs="$lib/$abi/knownrandombytes.o $measurelibs"
+        trylibs="$lib/$abi/knownrandombytes.o $trylibs"
         measurelibs="$lib/$abi/fastrandombytes.o $measurelibs"
       fi
 
@@ -370,7 +368,7 @@ do
         $compiler -DSUPERCOP -DSMALL \
           -I. -I"$include" -I"$include/$abi" \
           -o try try.$language try-anything.$language \
-          "$op.a" $libs >../errors 2>&1 || ok=0
+          "$op.a" $trylibs >../errors 2>&1 || ok=0
         cat ../errors \
         | while read err
         do
@@ -404,7 +402,7 @@ do
         $compiler -DSUPERCOP\
           -I. -I"$include" -I"$include/$abi" \
           -o try try.$language try-anything.$language \
-          "$op.a" $libs >../errors 2>&1 || ok=0
+          "$op.a" $trylibs >../errors 2>&1 || ok=0
         cat ../errors \
         | while read err
         do
@@ -446,7 +444,7 @@ do
           -DSUPERCOP -DLOOPS=3 \
           -I. -I"$include" -I"$include/$abi" \
           -o measure measure.$language measure-anything.$language \
-          "$op.a" $libs >../errors 2>&1 || ok=0
+          "$op.a" $measurelibs >../errors 2>&1 || ok=0
         cat ../errors \
         | while read err
         do
@@ -531,6 +529,4 @@ do
   fi
 
 echo "=== `date` === finishing"
-
-exec 1>&7 7>&-
 cat $top/work/errors

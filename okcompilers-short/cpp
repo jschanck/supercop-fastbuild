@@ -1,2 +1,2 @@
 g++ -g -O3 -march=native -mtune=native -fomit-frame-pointer
-clang++ -g -O3 -march=native -mtune=native -fomit-frame-pointer
+clang++ -g -O3 -march=native -mtune=native -fomit-frame-pointer -Qunused-arguments
