@@ -1,14 +1,15 @@
 supercop-fastbuild
 ==================
 
-This is supercop-20170716 with a "do-one" script a few other changes
-to make testing new primitives easier.
+This is supercop-20170716 with a "do-one" script for building and
+testing primitives one at a time.
 
 DO NOT use this package for benchmarking.
 
-The "do-one" script lets you build just the packages you need to test
-the submission you're working on. For example, the RSA-2048 KEM example
-requires GMP, an RNG, and SHA256. So to build crypto_kem rsa2048 run
+The "do-one" script lets you build a minimal set of primitives for
+testing the submission you're working on. For example, the RSA-2048 KEM
+example requires GMP, an RNG, and SHA256. So to build crypto_kem rsa2048
+you would run:
 
     $ ./do-one gmp
     $ ./do-one crypto_stream chacha20
