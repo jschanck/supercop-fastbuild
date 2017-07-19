@@ -1,7 +1,7 @@
 supercop-fastbuild
 ==================
 
-This is supercop-20170716 with a "do-one" script for building and
+This is supercop-20170718 with a "do-one" script for building and
 testing primitives one at a time.
 
 DO NOT use this package for benchmarking.
@@ -24,6 +24,6 @@ The do-one script reads compiler configurations from okcompilers-short/c{,pp}.
 You may need to add platform specific configurations to properly test your
 submission.
 
-Original source: http://bench.cr.yp.to/supercop/supercop-20170716.tar.xz
+Original source: http://bench.cr.yp.to/supercop/supercop-20170718.tar.xz
 
 Supercop: http://bench.cr.yp.to/supercop.html
