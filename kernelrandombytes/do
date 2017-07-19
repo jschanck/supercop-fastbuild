@@ -9,6 +9,7 @@ okabi | (
       echo getentropy2
       echo getrandom
       echo getrandom2
+      echo getrandom3
       echo urandom
       echo backupforbenchmarkingnotsecure
     ) | (
@@ -23,7 +24,7 @@ okabi | (
             && cp $impl.c impl.c \
             && $c -c impl.c \
             && $c -o test test.c impl.o \
-            && killafter 300 ./test \
+            && killafter 1 ./test \
             && mkdir -p lib/$abi \
             && cp impl.o lib/$abi/kernelrandombytes.o \
             && touch done \
